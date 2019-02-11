@@ -34,7 +34,7 @@ class Command(BaseCommand):
                     from noc.sa.models.managedobject import ManagedObject
                     action = Action.objects.get(name='clearsession')
                     bras = [ManagedObject.objects.get(id=105), ManagedObject.objects.get(id=86)]
-                    commands = [[str(action.expand(mo,username=x))] for x in logins]
+                    commands = [[str(action.expand(bras[0],username=x))] for x in logins]
                     pprint(commands)
                     #[bras[0].mo.scripts.commands(commands=[]
 
