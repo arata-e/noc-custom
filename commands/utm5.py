@@ -1,3 +1,4 @@
+# coding: utf-8
 import requests
 from requests.auth import HTTPDigestAuth
 import json
@@ -118,7 +119,7 @@ class UTM5:
         return result;
     
     def get_slinks_for_account(self, account_id = None):
-        #Возвращает список сервисных связок для аккаунта
+        #Return all service links for account
         result = {"Result" : "Not found"}
         if not account_id:
             return result
