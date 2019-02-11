@@ -22,17 +22,23 @@ class Command(BaseCommand):
                 for i in range(len(services['data'])):
                     if services['data'][i]['service_type_array'] == 3:
                         service = utm.get_ipslink_data(services['data'][i]['slink_id_array'])
-                        if iptraffic_login in service['data']:
+                        if 'iptraffic_login' in service['data']:
                             if service['data']['iptraffic_login'] != '':
                                 logins.append(service['data']['iptraffic_login'])
                     if services['data'][i]['service_type_array'] == 5:
                         service = utm.get_dhsslink_data(services['data'][i]['slink_id_array'])
-                        if services['data'][i]['service_type_array'] == 3:
-                        service = utm.get_ipslink_data(services['data'][i]['slink_id_array'])
-                        if iptraffic_login in service['data']:
-                            if service['data']['iptraffic_login'] != '':
-                                logins.append(service['data']['iptraffic_login'])
-                pprint(logins)
+                        if 'login' in service['data']:
+                            if service['data']['login'] != '':
+                                logins.append(service['data']['login'])
+                if len((logins)) > 0:
+                    from noc.sa.models.action import Action
+                    from noc.sa.models.managedobject import ManagedObject
+                    action = = Action.objects.get(name='clearsession')
+                    bras = [ManagedObject.objects.get(id=105), ManagedObject.objects.get(id=86)]
+                    commands = [[str(a.expand(mo,username=x))] for x in logins]
+                    pprint(commands)
+                    #[bras[0].mo.scripts.commands(commands=[]
+
         else:
             print("Need --account parametr")
 
