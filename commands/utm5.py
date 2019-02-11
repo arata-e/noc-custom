@@ -16,7 +16,7 @@ class UTM5:
         self.apiurl = self.remote_system.config['apiurl']
 
     def call(self, function='', data = None):
-        #Вызов urfa функции через RESTApi. возвращает dict
+        #Call urfa funtion by RESTApi. Return dict
         r = self.apiurl+"utm5/call/" + function + '?apiKey=' + self.apikey
         if data:
             response = requests.put(r,verify=True, json=data, headers=headers)
@@ -27,7 +27,7 @@ class UTM5:
         else:
             response.raise_for_status()
     def simplecall(self, function='', data = None):
-        #Вызов urfa функции через RESTApi. возвращает строку
+        #Call urfa funtion by RESTApi. Return string
         r = self.apiurl+"utm5/call/" + function + '?apiKey=' + self.apikey
         if data:
             response = requests.put(r,verify=True, json=data, headers=headers)
