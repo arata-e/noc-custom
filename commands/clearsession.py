@@ -20,7 +20,10 @@ class Command(BaseCommand):
             if services['Result'] == 'Ok':
                 for i in range(len(services['data'])):
                     if services['data'][i]['service_type_array'] == 3:
-                        service = utm.get_slinks_data(services['data'][i]['slink_id_array'])
+                        service = utm.get_ipslink_data(services['data'][i]['slink_id_array'])
+                        pprint(service)
+                    if services['data'][i]['service_type_array'] == 5:
+                        service = utm.get_dhsslink_data(services['data'][i]['slink_id_array'])
                         pprint(service)
         else:
             print("Need --account parametr")

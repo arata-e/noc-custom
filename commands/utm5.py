@@ -121,11 +121,26 @@ class UTM5:
         
         return result;
 
-    def get_slinks_data(self, slink_id = None):
+    def get_ipslink_data(self, slink_id = None):
         result = {"Result" : "Not found"}
         if not slink_id:
             return result
         res    = self.call('rpcf_get_iptraffic_service_link', {'slink_id' : slink_id});
+        size   = len(res);
+        if (size != 0):
+            result   = {
+                "Result" : "Ok",
+                "data" : {}
+                }
+            result['data'] = res;
+        
+        return result;
+
+    def get_dhsslink_data(self, slink_id = None):
+        result = {"Result" : "Not found"}
+        if not slink_id:
+            return result
+        res    = self.call('rpcf_get_dialup_service_link', {'slink_id' : slink_id});
         size   = len(res);
         if (size != 0):
             result   = {
