@@ -5,36 +5,39 @@ import requests
 import pyping
 from pprint import pprint
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import logging
 
 # NOC modules
 from noc.core.service.ui import UIService
 from noc.sa.models.managedobject import ManagedObject
-
-BASE_URL = "https://api.telegram.org/bot{}".format('ACC_TELEGRAMRNNOCBOT_TOKEN')
-validuser=[166518598, -1001264455094,736153621]
+from noc.main.models.customfieldenumgroup import CustomFieldEnumGroup
+from noc.main.models.customfieldenumvalue import CustomFieldEnumValue
 
 class BotApplication(UIService):
     def startCommand(self,bot, update):
-        bot.send_message(chat_id=update.message.chat_id, text='?????')
+        chat_id = update.message.chat_id
+        if chat_id in validuser:
+             bot.send_message(chat_id=update.message.chat_id, text='?????')
+        else:
+            bot.sendMessage(chat_id=chat_id, text='Sorry, private area')
         
     def textMessage(self,bot, update):
-        pprint(dir(update))
         response = '' + update.message.text
         bot.send_message(chat_id=update.message.chat_id, text=response)
 
     def ping(self, bot, update, args):
+         if not update.message.chat_id in validuser:
+            return
          host = args[0]
          r = pyping.ping(host)
-
          if r.ret_code == 0:
-             msg = ("Success")
+             msg = ("{} Success".format(host))
          else:
-             msg = "Failed with {}".format(r.ret_code)
-
+             msg = "{} Failed with {}".format(host,r.ret_code)
          bot.send_message(chat_id=update.message.chat_id, text=msg)
 
     def start(self):
-        updater = Updater(token='686384604:AAEbjmxrTHJP9ZlgQg53odgCML-egZZtI1g')
+        updater = Updater(token=botkey)
         dispatcher = updater.dispatcher
         start_command_handler = CommandHandler('start', self.startCommand)
 #        text_message_handler = MessageHandler(Filters.text, self.textMessage)
@@ -86,4 +89,9 @@ class BotApplication(UIService):
      return {"statusCode": 200}, None
 
 if __name__ == "__main__":
+    BASE_URL = "https://api.telegram.org/bot{}".format('ACC_TELEGRAMRNNOCBOT_TOKEN')
+    botkey = str(CustomFieldEnumValue.objects.get(key='botkey', enum_group=CustomFieldEnumGroup.objects.get(name='botkeys')).value)
+    validuser=str(CustomFieldEnumValue.objects.get(key='validuser', enum_group=CustomFieldEnumGroup.objects.get(name='botkeys')).value).split(',')
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
     BotApplication().start()
