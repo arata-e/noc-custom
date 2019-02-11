@@ -16,6 +16,7 @@ class UTM5:
         self.apiurl = self.remote_system.config['apiurl']
 
     def call(self, function='', data = None):
+        #Вызов urfa функции через RESTApi. возвращает dict
         r = self.apiurl+"utm5/call/" + function + '?apiKey=' + self.apikey
         if data:
             response = requests.put(r,verify=True, json=data, headers=headers)
@@ -23,6 +24,17 @@ class UTM5:
             response = requests.put(r,verify=True,  headers=headers)
         if (response.ok):
             return json.loads(response.content)
+        else:
+            response.raise_for_status()
+    def simplecall(self, function='', data = None):
+        #Вызов urfa функции через RESTApi. возвращает строку
+        r = self.apiurl+"utm5/call/" + function + '?apiKey=' + self.apikey
+        if data:
+            response = requests.put(r,verify=True, json=data, headers=headers)
+        else:
+            response = requests.put(r,verify=True,  headers=headers)
+        if (response.ok):
+            return response.content
         else:
             response.raise_for_status()
 
@@ -106,6 +118,7 @@ class UTM5:
         return result;
     
     def get_slinks_for_account(self, account_id = None):
+        #Возвращает список сервисных связок для аккаунта
         result = {"Result" : "Not found"}
         if not account_id:
             return result
@@ -121,7 +134,24 @@ class UTM5:
         
         return result;
 
+    def get_periodikslink_data(self, slink_id = None):
+        #Возвращает данные о сервисной свяке для переодической услуги
+        result = {"Result" : "Not found"}
+        if not slink_id:
+            return result
+        res    = self.call('rpcf_get_periodic_service_link', {'slink_id' : slink_id});
+        size   = len(res);
+        if (size != 0):
+            result   = {
+                "Result" : "Ok",
+                "data" : {}
+                }
+            result['data'] = res;
+        
+        return result;
+
     def get_ipslink_data(self, slink_id = None):
+        #Возвращает данные о сервисной свяке для IP услуги
         result = {"Result" : "Not found"}
         if not slink_id:
             return result
@@ -137,6 +167,7 @@ class UTM5:
         return result;
 
     def get_dhsslink_data(self, slink_id = None):
+        #Возвращает данные о сервисной свяке для услуги коммутируемого доступа
         result = {"Result" : "Not found"}
         if not slink_id:
             return result
