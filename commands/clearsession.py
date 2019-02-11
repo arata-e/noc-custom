@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 if len((logins)) > 0:
                     from noc.sa.models.action import Action
                     from noc.sa.models.managedobject import ManagedObject
-                    action = = Action.objects.get(name='clearsession')
+                    action = Action.objects.get(name='clearsession')
                     bras = [ManagedObject.objects.get(id=105), ManagedObject.objects.get(id=86)]
                     commands = [[str(a.expand(mo,username=x))] for x in logins]
                     pprint(commands)
