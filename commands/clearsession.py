@@ -15,15 +15,13 @@ class Command(BaseCommand):
         account_id = options.get("account")
         if account_id:
             utm = UTM5()
-            #pprint(utm.search_user('15500739'))
-            services = utm.call('rpcf_get_all_services_for_user',{'account_id' : account_id})
+            services = utm.get_slinks_for_account(account_id)
             pprint(services)
-            for i in range(len(services['slink_id_count'])):
-                if services['slink_id_count'][i]['service_type_array'] == 3:
-                    data = {'slink_id' : services['slink_id_count'][i]['slink_id_array']}
-                    pprint(data)
-                    service = utm.call('rpcf_get_iptraffic_service_link', data)
-                    pprint(service)
+            if services['Result'] == 'Ok':
+                for i in range(len(services['data'])):
+                    if services['data'][i]['service_type_array'] == 3:
+                        service = utm.get_slinks_data(services['data'][i]['slink_id_array'])
+                        pprint(service)
         else:
             print("Need --account parametr")
 

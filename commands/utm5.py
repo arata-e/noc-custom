@@ -104,5 +104,37 @@ class UTM5:
             result['data'] = res;
         
         return result;
+    
+    def get_slinks_for_account(self, account_id = None):
+        result = {"Result" : "Not found"}
+        if not account_id:
+            return result
+        
+        res    = self.call('rpcf_get_all_services_for_user', {'account_id' : account_id});
+        size   = len(res);
+        if (size != 0):
+            result   = {
+                "Result" : "Ok",
+                "data" : {}
+                }
+            result['data'] = res['slink_id_count'];
+        
+        return result;
+
+    def get_slinks_data(self, slink_id = None):
+        result = {"Result" : "Not found"}
+        if not slink_id:
+            return result
+        res    = self.call('rpcf_get_iptraffic_service_link', {'slink_id' : slink_id});
+        size   = len(res);
+        if (size != 0):
+            result   = {
+                "Result" : "Ok",
+                "data" : {}
+                }
+            result['data'] = res;
+        
+        return result;
+
 
 
