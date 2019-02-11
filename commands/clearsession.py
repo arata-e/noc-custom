@@ -14,6 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         account_id = options.get("account")
         if account_id:
+            logins = []
             utm = UTM5()
             services = utm.get_slinks_for_account(account_id)
             pprint(services)
@@ -21,10 +22,17 @@ class Command(BaseCommand):
                 for i in range(len(services['data'])):
                     if services['data'][i]['service_type_array'] == 3:
                         service = utm.get_ipslink_data(services['data'][i]['slink_id_array'])
-                        pprint(service)
+                        if iptraffic_login in service['data']:
+                            if service['data']['iptraffic_login'] != '':
+                                logins.append(service['data']['iptraffic_login'])
                     if services['data'][i]['service_type_array'] == 5:
                         service = utm.get_dhsslink_data(services['data'][i]['slink_id_array'])
-                        pprint(service)
+                        if services['data'][i]['service_type_array'] == 3:
+                        service = utm.get_ipslink_data(services['data'][i]['slink_id_array'])
+                        if iptraffic_login in service['data']:
+                            if service['data']['iptraffic_login'] != '':
+                                logins.append(service['data']['iptraffic_login'])
+                pprint(logins)
         else:
             print("Need --account parametr")
 
