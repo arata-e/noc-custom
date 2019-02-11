@@ -17,7 +17,6 @@ class Command(BaseCommand):
             logins = []
             utm = UTM5()
             services = utm.get_slinks_for_account(account_id)
-            pprint(services)
             if services['Result'] == 'Ok':
                 for i in range(len(services['data'])):
                     if services['data'][i]['service_type_array'] == 3:
@@ -35,7 +34,7 @@ class Command(BaseCommand):
                     from noc.sa.models.managedobject import ManagedObject
                     action = Action.objects.get(name='clearsession')
                     bras = [ManagedObject.objects.get(id=105), ManagedObject.objects.get(id=86)]
-                    commands = [[str(a.expand(mo,username=x))] for x in logins]
+                    commands = [[str(action.expand(mo,username=x))] for x in logins]
                     pprint(commands)
                     #[bras[0].mo.scripts.commands(commands=[]
 
